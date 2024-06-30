@@ -1,0 +1,58 @@
+version: '3.0'
+
+services:
+  config-server:
+    build:
+      context: ./configserver
+      dockerfile: Dockerfile
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    ports:
+      - "8075:8075"
+    environment:
+      - SPRING_CLOUD_CONFIG_SERVER_GIT_URI=https://github.com/duygu2/hr-config-files
+    networks:
+      - common
+
+  discovery-server:
+    build:
+      context: ./discoveryserver
+      dockerfile: Dockerfile
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    ports:
+      - "8888:8888"
+    restart: on-failure
+    depends_on:
+      - config-server
+    environment:
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8075
+    networks:
+      - common
+
+  gateway-server:
+    build:
+      context: ./gatewayserver
+      dockerfile: Dockerfile
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+    ports:
+      - "8080:8080"
+    restart: on-failure
+    depends_on:
+      - discovery-server
+      - config-server
+    environment:
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8075
+    networks:
+      - common
+
+
+networks:
+  common:
+    driver: bridge
