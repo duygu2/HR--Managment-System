@@ -52,6 +52,48 @@ services:
     networks:
       - common
 
+  employee-service:
+    build:
+      context: ./employeeservice
+      dockerfile: Dockerfile
+      args:
+        GITHUB_USERNAME: ${GITHUB_USERNAME}
+        GITHUB_TOKEN: ${GITHUB_TOKEN}
+
+    ports:
+      - "8081:8081"
+    restart: on-failure
+    depends_on:
+      - employee-db
+      - discovery-server
+      - config-server
+      - gateway-server
+    networks:
+      - common
+    environment:
+      - SPRING_CLOUD_CONFIG_PROFILE=prod
+      - CONFIGURL=http://config-server:8075
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://employee-db:5432/employeeservice
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=test
+
+  employee-db:
+    image: postgres
+    container_name: employee-db-prod
+    environment:
+      POSTGRES_DB: employeeservice
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: test
+    ports:
+      - "5432:5432"
+    volumes:
+      - employee_data_prod:/var/lib/postgresql/data
+    networks:
+      - common
+
+volumes:
+  employee_data_prod:
+
 
 networks:
   common:
