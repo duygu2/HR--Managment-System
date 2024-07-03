@@ -1,6 +1,6 @@
 package com.duygu.employeeservice.entities;
 
-import com.duygu.employeeservice.core.BaseEntity;
+import com.duygu.employeeservice.core.entities.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 

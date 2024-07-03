@@ -1,4 +1,4 @@
-package com.duygu.employeeservice.core;
+package com.duygu.employeeservice.core.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

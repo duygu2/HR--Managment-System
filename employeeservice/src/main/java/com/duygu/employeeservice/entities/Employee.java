@@ -1,15 +1,12 @@
 package com.duygu.employeeservice.entities;
 
-import com.duygu.employeeservice.core.BaseEntity;
+import com.duygu.employeeservice.core.entities.BaseEntity;
 import jakarta.persistence.*;
-import jdk.dynalink.linker.LinkerServices;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.domain.PageRequest;
 
-import java.io.File;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
